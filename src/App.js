@@ -2,9 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import Pomodoro from './components/Pomodoro'; // Importe ton Pomodoro ici
 
 function App() {
-  const [activeSection, setActiveSection] = useState('dashboard'); // 'dashboard', 'mental', 'physical'
-  const [isAIExpanded, setIsAIExpanded] = useState(false); // Toggle input AI
+  const [activeSection, setActiveSection] = useState('dashboard'); // 'dashboard', 'mental', 'physical', 'pomodoro'
+  const [isAIExpanded, setIsAIExpanded] = useState(false); // Toggle interaction AI
   const [aiMessage, setAiMessage] = useState('Salut! Prêt pour une session pomodoro ? Ça améliorera ton focus.'); // Message IA par défaut
+  const [userMessage, setUserMessage] = useState(''); // Message utilisateur
   const inputRef = useRef(null); // Ref pour focus clavier
 
   useEffect(() => {
@@ -15,7 +16,9 @@ function App() {
 
   const handleAIClick = () => {
     // Simule interaction IA (à remplacer par appel OpenAI)
-    alert("Demande à ton coach IA : 'Quel plan aujourd'hui ?'");
+    // Ex. : Envoie userMessage à IA, met à jour aiMessage
+    setAiMessage(`Réponse à "${userMessage}" : Super idée ! On avance.`);
+    setUserMessage(''); // Reset input après envoi
   };
 
   const toggleAI = () => {
@@ -24,18 +27,20 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* Bandeau AI haut (toujours actif avec message) */}
+      {/* Bandeau AI haut (toujours avec "AI : [texte]") */}
       <header className="bg-blue-600 text-white p-2 text-center font-semibold text-lg fixed top-0 w-full z-10">
-        <div>{aiMessage}</div>
+        <div>AI : {aiMessage}</div>
         {isAIExpanded && (
           <div className="mt-2 p-2 bg-blue-500 rounded-b-lg">
+            <div>Me : </div>
             <div className="flex space-x-2">
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="Demande un plan personnalisé..."
+                value={userMessage}
+                onChange={(e) => setUserMessage(e.target.value)}
+                placeholder="Écris ici..."
                 className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
-                onChange={(e) => setAiMessage(e.target.value)} // Update message en live
               />
               <button
                 onClick={handleAIClick}
@@ -51,19 +56,8 @@ function App() {
       {/* Contenu principal (offset pour bandeau haut et barre bas) */}
       <main className="flex-1 pt-12 pb-16 overflow-y-auto">
         {activeSection === 'dashboard' && (
-          <div className="flex flex-col md:flex-row">
-            <section className="md:w-1/2 bg-green-100 p-6">
-              <h2 className="text-2xl font-semibold text-green-800 mb-4">Mental</h2>
-              <div className="grid grid-cols-1 gap-4">
-                {/* Rectangles Mental */}
-              </div>
-            </section>
-            <section className="md:w-1/2 bg-orange-100 p-6">
-              <h2 className="text-2xl font-semibold text-orange-800 mb-4">Physique</h2>
-              <div className="grid grid-cols-1 gap-4">
-                {/* Rectangles Physique */}
-              </div>
-            </section>
+          <div className="flex items-center justify-center h-full text-3xl font-bold text-gray-800">
+            Bienvenue sur Smarter
           </div>
         )}
 
