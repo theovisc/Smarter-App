@@ -5,7 +5,7 @@ function App() {
   const [activeSection, setActiveSection] = useState('dashboard'); // 'dashboard', 'mental', 'physical', 'pomodoro'
   const [isAIExpanded, setIsAIExpanded] = useState(false); // Toggle interaction AI
   const [aiMessage, setAiMessage] = useState('Salut! Prêt pour une session pomodoro ? Ça améliorera ton focus.'); // Message IA par défaut
-  const [userMessage, setUserMessage] = useState(''); // Message utilisateur
+  const [userInput, setUserInput] = useState(''); // Texte utilisateur dans l'input
   const inputRef = useRef(null); // Ref pour focus clavier
 
   useEffect(() => {
@@ -16,9 +16,9 @@ function App() {
 
   const handleAIClick = () => {
     // Simule interaction IA (à remplacer par appel OpenAI)
-    if (userMessage.trim()) {
-      setAiMessage(`Réponse à "${userMessage}" : Super idée ! On avance.`);
-      setUserMessage(''); // Reset input après envoi
+    if (userInput.trim()) {
+      setAiMessage(`Réponse à "${userInput}" : Super idée ! On avance.`);
+      setUserInput(''); // Reset input après envoi
     }
   };
 
@@ -28,24 +28,25 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* Bandeau AI haut (toujours avec "AI : [texte]" et "Me : [texte]" si expanded) */}
+      {/* Bandeau AI haut (toujours avec "AI : [texte]" et input expandé) */}
       <header className="bg-blue-600 text-white p-2 text-center font-semibold text-lg fixed top-0 w-full z-10">
         <div>AI : {aiMessage}</div>
         {isAIExpanded && (
           <div className="mt-2 p-2 bg-blue-500 rounded-b-lg">
-            <div>Me : {userMessage || 'Écris ici...'}</div>
-            <div className="flex space-x-2 mt-2">
+            <div className="flex items-center">
+              <span className="mr-2 font-medium">Me :</span>
               <input
                 ref={inputRef}
                 type="text"
-                value={userMessage}
-                onChange={(e) => setUserMessage(e.target.value)}
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
                 className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                placeholder="Écris ici..."
               />
               <button
                 onClick={handleAIClick}
-                className="bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-800"
-                disabled={!userMessage.trim()}
+                className="bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-800 ml-2"
+                disabled={!userInput.trim()}
               >
                 Go
               </button>
