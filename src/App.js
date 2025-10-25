@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Pomodoro from './components/Pomodoro'; // Importe ton Pomodoro ici
 
 function App() {
   const [activeSection, setActiveSection] = useState('dashboard'); // 'dashboard', 'mental', 'physical'
-  const [isAIExpanded, setIsAIExpanded] = useState(false); // Toggle bandeau AI
+  const [isAIExpanded, setIsAIExpanded] = useState(false); // Toggle input AI
+  const [aiMessage, setAiMessage] = useState('Salut! Prêt pour une session pomodoro ? Ça améliorera ton focus.'); // Message IA par défaut
+  const inputRef = useRef(null); // Ref pour focus clavier
 
-  const handleIAClick = () => {
+  useEffect(() => {
+    if (isAIExpanded && inputRef.current) {
+      inputRef.current.focus(); // Ouvre clavier au clic
+    }
+  }, [isAIExpanded]);
+
+  const handleAIClick = () => {
     // Simule interaction IA (à remplacer par appel OpenAI)
     alert("Demande à ton coach IA : 'Quel plan aujourd'hui ?'");
   };
@@ -16,19 +24,21 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* Bandeau AI haut (toujours visible, dépliable) */}
-      <header className="bg-blue-600 text-white p-2 text-center font-bold text-lg fixed top-0 w-full z-10">
-        Ton Coach IA
+      {/* Bandeau AI haut (toujours actif avec message) */}
+      <header className="bg-blue-600 text-white p-2 text-center font-semibold text-lg fixed top-0 w-full z-10">
+        <div>{aiMessage}</div>
         {isAIExpanded && (
           <div className="mt-2 p-2 bg-blue-500 rounded-b-lg">
             <div className="flex space-x-2">
               <input
+                ref={inputRef}
                 type="text"
                 placeholder="Demande un plan personnalisé..."
                 className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                onChange={(e) => setAiMessage(e.target.value)} // Update message en live
               />
               <button
-                onClick={handleIAClick}
+                onClick={handleAIClick}
                 className="bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-800"
               >
                 Go
@@ -45,21 +55,13 @@ function App() {
             <section className="md:w-1/2 bg-green-100 p-6">
               <h2 className="text-2xl font-semibold text-green-800 mb-4">Mental</h2>
               <div className="grid grid-cols-1 gap-4">
-                <div className="bg-green-200 p-4 rounded-lg">
-                  <h3 className="font-semibold">Quiz du jour</h3>
-                  <p>Teste tes connaissances en histoire !</p>
-                </div>
-                {/* Autres cartes Mental */}
+                {/* Rectangles Mental */}
               </div>
             </section>
             <section className="md:w-1/2 bg-orange-100 p-6">
               <h2 className="text-2xl font-semibold text-orange-800 mb-4">Physique</h2>
               <div className="grid grid-cols-1 gap-4">
-                <div className="bg-orange-200 p-4 rounded-lg">
-                  <h3 className="font-semibold">Workout Muscu</h3>
-                  <p>10 push-ups, 15 squats.</p>
-                </div>
-                {/* Autres cartes Physique */}
+                {/* Rectangles Physique */}
               </div>
             </section>
           </div>
@@ -69,16 +71,27 @@ function App() {
           <section className="bg-green-100 p-6">
             <h2 className="text-2xl font-semibold text-green-800 mb-4">Mental</h2>
             <div className="grid grid-cols-1 gap-4">
-              <div className="bg-green-200 p-4 rounded-lg">
+              <div
+                className="bg-green-200 p-4 rounded-lg cursor-pointer hover:bg-green-300"
+                onClick={() => setActiveSection('pomodoro')}
+              >
+                <h3 className="font-semibold">Séance Pomodoro</h3>
+                <p>Booste ta concentration avec un timer personnalisé.</p>
+              </div>
+              <div
+                className="bg-green-200 p-4 rounded-lg cursor-pointer hover:bg-green-300"
+                onClick={() => alert('Quiz du jour en développement !')}
+              >
                 <h3 className="font-semibold">Quiz du jour</h3>
                 <p>Teste tes connaissances en histoire !</p>
               </div>
-              <div className="bg-green-200 p-4 rounded-lg">
+              <div
+                className="bg-green-200 p-4 rounded-lg cursor-pointer hover:bg-green-300"
+                onClick={() => alert('Flashcards en développement !')}
+              >
                 <h3 className="font-semibold">Flashcards Mémoire</h3>
                 <p>Revois 10 mots en espagnol.</p>
               </div>
-              {/* Intègre Pomodoro ici */}
-              <Pomodoro />
             </div>
           </section>
         )}
@@ -87,19 +100,41 @@ function App() {
           <section className="bg-orange-100 p-6">
             <h2 className="text-2xl font-semibold text-orange-800 mb-4">Physique</h2>
             <div className="grid grid-cols-1 gap-4">
-              <div className="bg-orange-200 p-4 rounded-lg">
+              <div
+                className="bg-orange-200 p-4 rounded-lg cursor-pointer hover:bg-orange-300"
+                onClick={() => alert('Workout en développement !')}
+              >
                 <h3 className="font-semibold">Workout Muscu</h3>
                 <p>10 push-ups, 15 squats.</p>
               </div>
-              <div className="bg-orange-200 p-4 rounded-lg">
+              <div
+                className="bg-orange-200 p-4 rounded-lg cursor-pointer hover:bg-orange-300"
+                onClick={() => alert('Yoga en développement !')}
+              >
                 <h3 className="font-semibold">Étirements Yoga</h3>
                 <p>5 min pour détendre ton dos.</p>
               </div>
-              <div className="bg-orange-200 p-4 rounded-lg">
+              <div
+                className="bg-orange-200 p-4 rounded-lg cursor-pointer hover:bg-orange-300"
+                onClick={() => alert('Marche en développement !')}
+              >
                 <h3 className="font-semibold">Marche Rapide</h3>
                 <p>15 min pour booster ton énergie.</p>
               </div>
             </div>
+          </section>
+        )}
+
+        {activeSection === 'pomodoro' && (
+          <section className="bg-green-100 p-6">
+            <h2 className="text-2xl font-semibold text-green-800 mb-4">Séance Pomodoro</h2>
+            <Pomodoro />
+            <button
+              onClick={() => setActiveSection('mental')}
+              className="mt-4 bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700"
+            >
+              Retour
+            </button>
           </section>
         )}
       </main>
