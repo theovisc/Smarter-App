@@ -16,9 +16,10 @@ function App() {
 
   const handleAIClick = () => {
     // Simule interaction IA (à remplacer par appel OpenAI)
-    // Ex. : Envoie userMessage à IA, met à jour aiMessage
-    setAiMessage(`Réponse à "${userMessage}" : Super idée ! On avance.`);
-    setUserMessage(''); // Reset input après envoi
+    if (userMessage.trim()) {
+      setAiMessage(`Réponse à "${userMessage}" : Super idée ! On avance.`);
+      setUserMessage(''); // Reset input après envoi
+    }
   };
 
   const toggleAI = () => {
@@ -27,24 +28,24 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      {/* Bandeau AI haut (toujours avec "AI : [texte]") */}
+      {/* Bandeau AI haut (toujours avec "AI : [texte]" et "Me : [texte]" si expanded) */}
       <header className="bg-blue-600 text-white p-2 text-center font-semibold text-lg fixed top-0 w-full z-10">
         <div>AI : {aiMessage}</div>
         {isAIExpanded && (
           <div className="mt-2 p-2 bg-blue-500 rounded-b-lg">
-            <div>Me : </div>
-            <div className="flex space-x-2">
+            <div>Me : {userMessage || 'Écris ici...'}</div>
+            <div className="flex space-x-2 mt-2">
               <input
                 ref={inputRef}
                 type="text"
                 value={userMessage}
                 onChange={(e) => setUserMessage(e.target.value)}
-                placeholder="Écris ici..."
                 className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
               />
               <button
                 onClick={handleAIClick}
                 className="bg-blue-700 text-white py-2 px-4 rounded-lg hover:bg-blue-800"
+                disabled={!userMessage.trim()}
               >
                 Go
               </button>
@@ -54,15 +55,15 @@ function App() {
       </header>
 
       {/* Contenu principal (offset pour bandeau haut et barre bas) */}
-      <main className="flex-1 pt-12 pb-16 overflow-y-auto">
+      <main className="flex-1 pt-16 pb-16 overflow-y-auto flex items-center justify-center">
         {activeSection === 'dashboard' && (
-          <div className="flex items-center justify-center h-full text-3xl font-bold text-gray-800">
+          <div className="text-4xl font-bold text-gray-800 text-center p-8">
             Bienvenue sur Smarter
           </div>
         )}
 
         {activeSection === 'mental' && (
-          <section className="bg-green-100 p-6">
+          <section className="bg-green-100 p-6 w-full">
             <h2 className="text-2xl font-semibold text-green-800 mb-4">Mental</h2>
             <div className="grid grid-cols-1 gap-4">
               <div
@@ -91,7 +92,7 @@ function App() {
         )}
 
         {activeSection === 'physical' && (
-          <section className="bg-orange-100 p-6">
+          <section className="bg-orange-100 p-6 w-full">
             <h2 className="text-2xl font-semibold text-orange-800 mb-4">Physique</h2>
             <div className="grid grid-cols-1 gap-4">
               <div
@@ -120,7 +121,7 @@ function App() {
         )}
 
         {activeSection === 'pomodoro' && (
-          <section className="bg-green-100 p-6">
+          <section className="bg-green-100 p-6 w-full">
             <h2 className="text-2xl font-semibold text-green-800 mb-4">Séance Pomodoro</h2>
             <Pomodoro />
             <button
