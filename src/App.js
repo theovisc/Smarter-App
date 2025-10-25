@@ -40,7 +40,7 @@ function App() {
                 type="text"
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
-                className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="p-2 border rounded-lg bg-white text-black focus:outline-none focus:ring-2 focus:ring-blue-300"
                 placeholder="Écris ici..."
               />
               <button
